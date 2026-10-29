@@ -8,6 +8,7 @@ const PRODUCTS = [
 
 const SQUARE_APP_ID = "sandbox-sq0idb-UBEwG1bug8S2dU35VU4hLg";
 const SQUARE_LOCATION_ID = "LMEWWCGNR4K0P";
+const VENMO_USERNAME = "Maria-Castro-937";
 
 const grid = document.getElementById("product-grid");
 
@@ -19,41 +20,28 @@ for (const p of PRODUCTS) {
     <h2>${p.name}</h2>
     <p class="price">$${p.price}</p>
     <div id="paypal-${p.id}" class="paypal-btn"></div>
-    <div id="venmo-${p.id}" class="paypal-btn"></div>
+    <a class="venmo-btn" target="_blank" rel="noopener" href="https://venmo.com/${VENMO_USERNAME}?txn=pay&amount=${p.price}&note=${encodeURIComponent(p.name + " Slime")}">Pay with Venmo</a>
     <button type="button" class="cashapp-select-btn" data-id="${p.id}">Pay with Cash App</button>
   `;
   grid.appendChild(card);
 }
 
-// ---- PayPal + Venmo (via PayPal) ----
+// ---- PayPal ----
 if (window.paypal) {
   for (const p of PRODUCTS) {
-    const createOrder = (data, actions) => actions.order.create({
-      purchase_units: [{
-        description: p.name + " Slime",
-        amount: { value: p.price, currency_code: "USD" },
-      }],
-    });
-    const onApprove = (data, actions) => actions.order.capture().then((details) => {
-      alert("Thanks " + details.payer.name.given_name + "! Your " + p.name + " slime order is in. 🦄");
-    });
-
     paypal.Buttons({
       fundingSource: paypal.FUNDING.PAYPAL,
       style: { shape: "pill", color: "gold", label: "pay", height: 40 },
-      createOrder,
-      onApprove,
+      createOrder: (data, actions) => actions.order.create({
+        purchase_units: [{
+          description: p.name + " Slime",
+          amount: { value: p.price, currency_code: "USD" },
+        }],
+      }),
+      onApprove: (data, actions) => actions.order.capture().then((details) => {
+        alert("Thanks " + details.payer.name.given_name + "! Your " + p.name + " slime order is in. 🦄");
+      }),
     }).render("#paypal-" + p.id);
-
-    const venmoButton = paypal.Buttons({
-      fundingSource: paypal.FUNDING.VENMO,
-      style: { shape: "pill", height: 40 },
-      createOrder,
-      onApprove,
-    });
-    if (venmoButton.isEligible()) {
-      venmoButton.render("#venmo-" + p.id);
-    }
   }
 }
 
@@ -80,30 +68,44 @@ async function selectCashAppProduct(p) {
   section.hidden = false;
   section.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  const payments = await initSquarePayments();
+  status.textContent = "Loading Cash App Pay...";
+
+  let payments;
+  try {
+    payments = await initSquarePayments();
+  } catch (err) {
+    status.textContent = "Cash App Pay failed to load: " + err.message;
+    return;
+  }
   if (!payments) {
-    status.textContent = "Cash App Pay isn't available right now.";
+    status.textContent = "Cash App Pay isn't available right now (Square SDK didn't load — try refreshing the page).";
     return;
   }
 
-  if (cashAppPayInstance) {
-    await cashAppPayInstance.destroy();
-    mount.innerHTML = "";
+  try {
+    if (cashAppPayInstance) {
+      await cashAppPayInstance.destroy();
+      mount.innerHTML = "";
+    }
+
+    const paymentRequest = payments.paymentRequest({
+      countryCode: "US",
+      currencyCode: "USD",
+      locationId: SQUARE_LOCATION_ID,
+      total: { amount: p.price, label: p.name + " Slime" },
+    });
+
+    cashAppPayInstance = await payments.cashAppPay(paymentRequest, {
+      redirectURL: window.location.href,
+      referenceId: p.id,
+    });
+
+    await cashAppPayInstance.attach("#cash-app-pay-btn");
+    status.textContent = "";
+  } catch (err) {
+    status.textContent = "Couldn't load Cash App Pay: " + err.message;
+    return;
   }
-
-  const paymentRequest = payments.paymentRequest({
-    countryCode: "US",
-    currencyCode: "USD",
-    locationId: SQUARE_LOCATION_ID,
-    total: { amount: p.price, label: p.name + " Slime" },
-  });
-
-  cashAppPayInstance = await payments.cashAppPay(paymentRequest, {
-    redirectURL: window.location.href,
-    referenceId: p.id,
-  });
-
-  await cashAppPayInstance.attach("#cash-app-pay-btn");
 
   cashAppPayInstance.addEventListener("ontokenization", async (event) => {
     const { tokenResult } = event.detail;
