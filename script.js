@@ -6,8 +6,8 @@ const PRODUCTS = [
   { id: "yellow", name: "Sunshine Yellow", price: "15.00" },
 ];
 
-const SQUARE_APP_ID = "sandbox-sq0idb-UBEwG1bug8S2dU35VU4hLg";
-const SQUARE_LOCATION_ID = "LMEWWCGNR4K0P";
+const SQUARE_APP_ID = "sq0idp-02nk1VRw4TqQ1kjeHlYSrA";
+const SQUARE_LOCATION_ID = "L4FX8220TJCKY";
 const VENMO_USERNAME = "Maria-Castro-937";
 
 const grid = document.getElementById("product-grid");

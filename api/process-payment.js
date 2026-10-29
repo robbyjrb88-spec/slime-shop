@@ -1,5 +1,5 @@
-const SQUARE_LOCATION_ID = "LMEWWCGNR4K0P";
-const SQUARE_API_BASE = "https://connect.squareupsandbox.com";
+const SQUARE_LOCATION_ID = "L4FX8220TJCKY";
+const SQUARE_API_BASE = "https://connect.squareup.com";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
