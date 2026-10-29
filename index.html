@@ -17,84 +17,23 @@
 </header>
 
 <main class="shop">
-  <div class="product-grid">
+  <div class="product-grid" id="product-grid"></div>
 
-    <div class="product-card">
-      <div class="slime-jar pink"><span class="shine"></span></div>
-      <h2>Unicorn Pink</h2>
-      <p class="price">$15.00</p>
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="buy-form">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="robbyjr88@yahoo.com">
-        <input type="hidden" name="item_name" value="Unicorn Pink Slime">
-        <input type="hidden" name="amount" value="15.00">
-        <input type="hidden" name="currency_code" value="USD">
-        <button type="submit" class="buy-btn">Buy Now 🛒</button>
-      </form>
+  <section class="other-pay">
+    <h3>Prefer Venmo or Cash App?</h3>
+    <p>Send $15 + your slime color &amp; shipping address to:</p>
+    <div class="handles">
+      <span class="handle">Venmo: <strong>@your-venmo</strong></span>
+      <span class="handle">Cash App: <strong>$your-cashtag</strong></span>
     </div>
-
-    <div class="product-card">
-      <div class="slime-jar purple"><span class="shine"></span></div>
-      <h2>Galaxy Purple</h2>
-      <p class="price">$15.00</p>
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="buy-form">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="robbyjr88@yahoo.com">
-        <input type="hidden" name="item_name" value="Galaxy Purple Slime">
-        <input type="hidden" name="amount" value="15.00">
-        <input type="hidden" name="currency_code" value="USD">
-        <button type="submit" class="buy-btn">Buy Now 🛒</button>
-      </form>
-    </div>
-
-    <div class="product-card">
-      <div class="slime-jar blue"><span class="shine"></span></div>
-      <h2>Sky Blue</h2>
-      <p class="price">$15.00</p>
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="buy-form">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="robbyjr88@yahoo.com">
-        <input type="hidden" name="item_name" value="Sky Blue Slime">
-        <input type="hidden" name="amount" value="15.00">
-        <input type="hidden" name="currency_code" value="USD">
-        <button type="submit" class="buy-btn">Buy Now 🛒</button>
-      </form>
-    </div>
-
-    <div class="product-card">
-      <div class="slime-jar green"><span class="shine"></span></div>
-      <h2>Mint Green</h2>
-      <p class="price">$15.00</p>
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="buy-form">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="robbyjr88@yahoo.com">
-        <input type="hidden" name="item_name" value="Mint Green Slime">
-        <input type="hidden" name="amount" value="15.00">
-        <input type="hidden" name="currency_code" value="USD">
-        <button type="submit" class="buy-btn">Buy Now 🛒</button>
-      </form>
-    </div>
-
-    <div class="product-card">
-      <div class="slime-jar yellow"><span class="shine"></span></div>
-      <h2>Sunshine Yellow</h2>
-      <p class="price">$15.00</p>
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" class="buy-form">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="robbyjr88@yahoo.com">
-        <input type="hidden" name="item_name" value="Sunshine Yellow Slime">
-        <input type="hidden" name="amount" value="15.00">
-        <input type="hidden" name="currency_code" value="USD">
-        <button type="submit" class="buy-btn">Buy Now 🛒</button>
-      </form>
-    </div>
-
-  </div>
+  </section>
 </main>
 
 <footer>
   <p>🦄 Follow us on TikTok for restocks &amp; drops 🦄</p>
 </footer>
 
+<script src="https://www.paypal.com/sdk/js?client-id=BAAdhCXE-fSp2J2UsMfGTa_TVQk6wYeHIgS1ILPjYQ0Ir3B8qIBa10HcodEF3OmNsfQBZ86mIeKAUJCVhI&currency=USD&components=buttons"></script>
+<script src="script.js"></script>
 </body>
 </html>

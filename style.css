@@ -116,6 +116,44 @@ body {
   transform: scale(1.05);
 }
 
+.other-pay {
+  text-align: center;
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(216, 90, 170, 0.18);
+}
+
+.other-pay h3 {
+  color: #c2277a;
+  margin-bottom: 0.5rem;
+}
+
+.other-pay p {
+  color: #8e5a9e;
+  margin-bottom: 0.75rem;
+}
+
+.handles {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.handle {
+  background: #ffe3f1;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  color: #c2277a;
+}
+
+.paypal-btn {
+  max-width: 220px;
+  margin: 0 auto;
+}
+
 footer {
   text-align: center;
   padding: 2rem 1rem 3rem;
