@@ -6,6 +6,9 @@ const PRODUCTS = [
   { id: "yellow", name: "Sunshine Yellow", price: "15.00" },
 ];
 
+const SQUARE_APP_ID = "sandbox-sq0idb-UBEwG1bug8S2dU35VU4hLg";
+const SQUARE_LOCATION_ID = "L4FX8220TJCKY";
+
 const grid = document.getElementById("product-grid");
 
 for (const p of PRODUCTS) {
@@ -17,10 +20,12 @@ for (const p of PRODUCTS) {
     <p class="price">$${p.price}</p>
     <div id="paypal-${p.id}" class="paypal-btn"></div>
     <div id="venmo-${p.id}" class="paypal-btn"></div>
+    <button type="button" class="cashapp-select-btn" data-id="${p.id}">Pay with Cash App</button>
   `;
   grid.appendChild(card);
 }
 
+// ---- PayPal + Venmo (via PayPal) ----
 if (window.paypal) {
   for (const p of PRODUCTS) {
     const createOrder = (data, actions) => actions.order.create({
@@ -46,9 +51,91 @@ if (window.paypal) {
       createOrder,
       onApprove,
     });
-    // Venmo only shows for eligible US buyers/devices - skip quietly otherwise
     if (venmoButton.isEligible()) {
       venmoButton.render("#venmo-" + p.id);
     }
   }
 }
+
+// ---- Cash App Pay (via Square) ----
+let squarePayments = null;
+let cashAppPayInstance = null;
+
+async function initSquarePayments() {
+  if (!window.Square) return null;
+  if (!squarePayments) {
+    squarePayments = window.Square.payments(SQUARE_APP_ID, SQUARE_LOCATION_ID);
+  }
+  return squarePayments;
+}
+
+async function selectCashAppProduct(p) {
+  const section = document.getElementById("cashapp-checkout");
+  const selectedLabel = document.getElementById("cashapp-selected");
+  const status = document.getElementById("cashapp-status");
+  const mount = document.getElementById("cash-app-pay-btn");
+
+  status.textContent = "";
+  selectedLabel.textContent = `${p.name} Slime — $${p.price}`;
+  section.hidden = false;
+  section.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  const payments = await initSquarePayments();
+  if (!payments) {
+    status.textContent = "Cash App Pay isn't available right now.";
+    return;
+  }
+
+  if (cashAppPayInstance) {
+    await cashAppPayInstance.destroy();
+    mount.innerHTML = "";
+  }
+
+  const paymentRequest = payments.paymentRequest({
+    countryCode: "US",
+    currencyCode: "USD",
+    total: { amount: p.price, label: p.name + " Slime" },
+  });
+
+  cashAppPayInstance = await payments.cashAppPay(paymentRequest, {
+    redirectURL: window.location.href,
+    referenceId: p.id,
+  });
+
+  await cashAppPayInstance.attach("#cash-app-pay-btn");
+
+  cashAppPayInstance.addEventListener("ontokenization", async (event) => {
+    const { tokenResult } = event.detail;
+    if (tokenResult.status === "OK") {
+      status.textContent = "Processing payment...";
+      try {
+        const res = await fetch("/api/process-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sourceId: tokenResult.token,
+            amount: p.price,
+            itemName: p.name + " Slime",
+          }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          status.textContent = "Thanks! Your " + p.name + " slime order is in. 🦄";
+        } else {
+          status.textContent = "Payment failed: " + (data.error || "unknown error");
+        }
+      } catch (err) {
+        status.textContent = "Payment failed: " + err.message;
+      }
+    } else {
+      status.textContent = "Payment was not completed.";
+    }
+  });
+}
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".cashapp-select-btn");
+  if (!btn) return;
+  const p = PRODUCTS.find((prod) => prod.id === btn.dataset.id);
+  if (p) selectCashAppProduct(p);
+});

@@ -154,6 +154,57 @@ body {
   margin: 0 auto;
 }
 
+.cashapp-select-btn {
+  font-family: 'Fredoka', sans-serif;
+  background: #00d632;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 214, 50, 0.35);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.cashapp-select-btn:hover {
+  background: #00b82b;
+  transform: scale(1.05);
+}
+
+.cashapp-checkout {
+  text-align: center;
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(216, 90, 170, 0.18);
+}
+
+.cashapp-checkout h3 {
+  color: #00b82b;
+  margin-bottom: 0.5rem;
+}
+
+#cashapp-selected {
+  color: #8e5a9e;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+#cash-app-pay-btn {
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.cashapp-status {
+  margin-top: 0.75rem;
+  color: #8e5a9e;
+  font-weight: 600;
+}
+
 footer {
   text-align: center;
   padding: 2rem 1rem 3rem;
