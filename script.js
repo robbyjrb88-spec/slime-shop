@@ -7,7 +7,7 @@ const PRODUCTS = [
 ];
 
 const SQUARE_APP_ID = "sandbox-sq0idb-UBEwG1bug8S2dU35VU4hLg";
-const SQUARE_LOCATION_ID = "L4FX8220TJCKY";
+const SQUARE_LOCATION_ID = "LMEWWCGNR4K0P";
 
 const grid = document.getElementById("product-grid");
 
@@ -94,6 +94,7 @@ async function selectCashAppProduct(p) {
   const paymentRequest = payments.paymentRequest({
     countryCode: "US",
     currencyCode: "USD",
+    locationId: SQUARE_LOCATION_ID,
     total: { amount: p.price, label: p.name + " Slime" },
   });
 
